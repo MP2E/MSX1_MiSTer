@@ -43,13 +43,13 @@ wire        subtype_r_type, subtype_koei, subtype_wizardy;
 wire        scc_oe, fmPac_oe;
 wire [7:0]  d_to_cpu_scc, d_to_cpu_fmPAC;
 wire [14:0] scc_sound;
-wire [15:0] fmPAC_sound;
+wire [13:0] fmPAC_sound;
 
-assign sound       = mapper == MAPPER_KONAMI_SCC   ? scc_sound         :
-                     cart_type == CART_TYPE_SCC    ? scc_sound         :
-                     cart_type == CART_TYPE_SCC2   ? scc_sound         :
-                     cart_type == CART_TYPE_FM_PAC ? fmPAC_sound[15:1] :
-                                                     14'd0             ;
+assign sound       = mapper == MAPPER_KONAMI_SCC   ? scc_sound                               :
+                     cart_type == CART_TYPE_SCC    ? scc_sound                               :
+                     cart_type == CART_TYPE_SCC2   ? scc_sound                               :
+                     cart_type == CART_TYPE_FM_PAC ? {fmPAC_sound,1'b0} + {fmPAC_sound,1'b0} :
+                                                     14'd0                                   ;
 
 assign mem_rden[0] = ~SLTSL_n & rd;
 assign mem_addr[0] = en_konami      ? mem_addr_konami           :

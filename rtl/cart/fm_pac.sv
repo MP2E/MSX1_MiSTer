@@ -11,7 +11,7 @@ module cart_fm_pac
    input            rd,
    input            iorq,
    input            m1,
-   output signed [15:0] sound,
+   output    [13:0] sound,
    output           cart_oe,  //Output data
    output           sram_we,
    output           sram_oe,  //Output sram
@@ -77,16 +77,17 @@ assign sram_addr  = {2'b00,addr[12:0]};
 assign mem_addr   = {bank, addr[13:0]};
 assign mem_oe     = cs; //addr[15:14] == 2'b01;
 
-jt2413 opll
+opll opll
 (
-   .rst(reset),
-   .clk(clk),
-   .cen(clk_en),
-   .din(d_from_cpu),
-   .addr(addr[0]),
+   .xin(clk),
+   .xout(1'b0),
+   .xena(clk_en),
+   .d(d_from_cpu),
+   .a(addr[0]),
    .cs_n(1'b0),
-   .wr_n(~(io_wr | opll_wr)),
-   .snd(sound)
+   .we_n(~(io_wr | opll_wr)),
+   .ic_n(~reset),
+   .mixout(sound)
 );
 
 endmodule
